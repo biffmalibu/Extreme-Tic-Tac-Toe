@@ -8,7 +8,11 @@
  * given player.
  */
 public class Minimax  {
+    public static boolean useAlphaBeta = false;
 
+    public static void setAlphaBeta(boolean useAlphaBeta) {
+        Minimax.useAlphaBeta = useAlphaBeta;
+    }
     /**
      * Determines the action/move that the next player should make given the
      * current state of the game by running Minimax with the state as the root.
@@ -34,12 +38,19 @@ public class Minimax  {
             // return the result of evaluation function.
             return state.getActionEval();
 
-
         } else if(state.isMax()) {
-            return maxValue(state, depth, loggingDepth, loggingPrefix);
+            if (useAlphaBeta) {
+                return maxValueAlphaBeta(state, depth, loggingDepth, loggingPrefix, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            } else {
+                return maxValue(state, depth, loggingDepth, loggingPrefix);
+            }
 
         } else {
-            return minValue(state, depth, loggingDepth, loggingPrefix);
+            if (useAlphaBeta) {
+                return minValueAlphaBeta(state, depth, loggingDepth, loggingPrefix, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            } else {
+                return minValue(state, depth, loggingDepth, loggingPrefix);
+            }
         }
     }
 
@@ -89,7 +100,60 @@ public class Minimax  {
 
         return actionUtility;
     }
+    /**
+     * Selects the move that maximizes utility over the successors of the
+     * given state using alpha-beta pruning.
+     * 
+     * @param state The state to find the next move for.
+     * @param depth The depth at which to stop in depth-limited Minimax; use -1
+     *              to conduct a full Minimax search.
+     * @param loggingDepth How many levels down the Minimax tree to display info
+     *                    for; use 0 to disable this feature. 
+     * @param loggingPrefix Used in conjunction with logging; use this to provide 
+     *               additional spacing for each subsequent level of the Minimax
+     *               tree for easier reading.
+     * @param alpha The current best value for the maximizing player.
+     * @param beta The current best value for the minimizing player.
+     * @return The action/move the next player should make and the expected
+     *         utility of that move.
+     */
+    public ActionUtility maxValueAlphaBeta(GameState state, 
+        int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
 
+        ActionUtility actionUtility = null;
+        
+        for(GameState successor : state.successors()){
+            ActionUtility successorActionUtility = 
+                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ");
+
+            // Logging.
+            if(loggingDepth > 0) {
+                System.out.println(loggingPrefix +"maxValueAlphaBeta: "+ 
+                    successor.toString().replaceAll("\n", "\n"+loggingPrefix) +"\n"+ 
+                    loggingPrefix +successorActionUtility.toString().
+                    replaceAll("\n", "\n"+loggingPrefix));
+            }   
+
+            if(actionUtility == null || 
+                successorActionUtility.getUtility() > actionUtility.getUtility()) {
+                actionUtility = successor.getActionUtility(successorActionUtility.getUtility());
+            }
+
+            // Alpha-beta pruning.
+            if (actionUtility.getUtility() >= beta) {
+                return actionUtility;
+            }
+            alpha = Math.max(alpha, actionUtility.getUtility());
+        }
+        
+        // Logging.
+        if(loggingDepth > 0) {
+            System.out.println(loggingPrefix+ "maxValueAlphaBeta: returning "+ 
+                actionUtility.toString().replaceAll("\n", "\n"+loggingPrefix));
+        }
+
+        return actionUtility;
+    }
     /**
      * Selects the move that minimizes utility over the successors of the
      * given state.
@@ -106,7 +170,7 @@ public class Minimax  {
      *         utility of that move.
      */
     public ActionUtility minValue(GameState state, 
-            int depth, int loggingDepth, String loggingPrefix){
+        int depth, int loggingDepth, String loggingPrefix){
 
         ActionUtility actionUtility = null;
         
@@ -135,4 +199,61 @@ public class Minimax  {
   
         return actionUtility;
     }
+    /**
+     * Selects the move that minimizes utility over the successors of the
+     * given state using alpha-beta pruning.
+     * 
+     * @param state The state to find the next move for.
+     * @param depth The depth at which to stop in depth-limited Minimax; use -1
+     *              to conduct a full Minimax search.
+     * @param loggingDepth How many levels down the Minimax tree to display info
+     *                    for; use 0 to disable this feature. 
+     * @param loggingPrefix Used in conjunction with logging; use this to provide 
+     *               additional spacing for each subsequent level of the Minimax
+     *               tree for easier reading.
+     * @param alpha The current best value for the maximizing player.
+     * @param beta The current best value for the minimizing player.
+     * @return The action/move the next player should make and the expected
+     *         utility of that move.
+     */
+    public ActionUtility minValueAlphaBeta(GameState state, 
+        int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
+
+        ActionUtility actionUtility = null;
+        
+        for(GameState successor : state.successors()){
+            ActionUtility successorActionUtility = 
+                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ");
+
+            // Logging.
+            if(loggingDepth > 0) {
+                System.out.println(loggingPrefix +"minValueAlphaBeta: "+ 
+                    successor.toString().replaceAll("\n", "\n"+loggingPrefix) +"\n"+ 
+                    loggingPrefix +successorActionUtility.toString().
+                    replaceAll("\n", "\n"+loggingPrefix));
+            }   
+
+            if(actionUtility == null || 
+                    successorActionUtility.getUtility() < actionUtility.getUtility()) {
+                actionUtility = successor.getActionUtility(successorActionUtility.getUtility());
+            }
+
+            // Alpha-beta pruning.
+            if (actionUtility.getUtility() <= alpha) {
+                return actionUtility;
+            }
+            beta = Math.min(beta, actionUtility.getUtility());
+        }
+        
+        // Logging.
+        if(loggingDepth > 0) {
+            System.out.println(loggingPrefix+ "minValueAlphaBeta: returning "+ 
+                actionUtility.toString().replaceAll("\n", "\n"+loggingPrefix));
+        }
+
+        return actionUtility;
+    }
+
+
+    
 }

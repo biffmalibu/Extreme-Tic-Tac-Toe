@@ -266,14 +266,22 @@ public class TicTacToe {
     int loggingDepth;
     Scanner input;
     Minimax minimax;
+    boolean useAlphaBeta;
+    boolean useDepthLimit;
+    int depth;
 
     /**
      * Initializes helpers for the game.
      */
-    public TicTacToe(int loggingDepth) {
+    public TicTacToe(int loggingDepth, boolean useAlphaBeta, boolean useDepthLimit, int depth) {
         input = new Scanner(System.in);
         minimax = new Minimax();
+        minimax.setAlphaBeta(useAlphaBeta);
         this.loggingDepth = loggingDepth;
+        this.useAlphaBeta = useAlphaBeta;
+        this.useDepthLimit = useDepthLimit;
+        this.depth = depth;
+        System.out.println("useAlphaBeta: "+ useAlphaBeta +", useDepthLimit: "+ useDepthLimit +", depth: "+ depth +", loggingDepth: "+ loggingDepth);
     }
 
     /**
@@ -346,24 +354,52 @@ public class TicTacToe {
      * Starts a game of tic-tac-toe between the user and the computer.
      * @param args Ignored.
      */
-    public static void main(String[] args) {
-        String USAGE = "Usage: java TicTacToe [-h] [loggingDepth]\n"+
-            "All parameters are optional.\n"+
-            "  -h: Display this help message.\n"+
-            "  loggingDepth: How many levels down the Minimax tree to display info; use 0 to turn off (default).\n";
+        public static void main(String[] args) {
+            String USAGE = "Usage: java TicTacToe [-h] [-a] [-d <depth>] [-l <loggingDepth>]\n" +
+                    "All parameters are optional.\n" +
+                    "  -h: Display this help message.\n" +
+                    "  -a: Enable alpha-beta pruning.\n" +
+                    "  -d <depth>: Specify the depth for depth-limited minimax.\n" +
+                    "  -l <loggingDepth>: Specify the logging depth.\n";
 
-        int loggingDepth = 0;
-        if(args.length > 0){
-            if(args[0].equals("-h")){
-                System.out.println(USAGE);
-                System.exit(0);
+            int loggingDepth = 0;
+            boolean useAlphaBeta = false;
+            boolean useDepthLimit = false;
+            int depth = 0;
+
+            if (args.length > 0) {
+                if (args[0].equals("-h")) {
+                    System.out.println(USAGE);
+                    System.exit(0);
+                }
+
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i].equals("-a")) {
+                        useAlphaBeta = true;
+                    }
+                    if (args[i].equals("-d")) {
+                        if (i + 1 < args.length) {
+                            depth = Integer.parseInt(args[i + 1]);
+                            useDepthLimit = true;
+                        } else {
+                            System.out.println("Invalid depth value.");
+                            System.exit(0);
+                        }
+                    }
+                    if (args[i].equals("-l")) {
+                        if (i + 1 < args.length) {
+                            loggingDepth = Integer.parseInt(args[i + 1]);
+                        } else {
+                            System.out.println("Invalid logging depth value.");
+                            System.exit(0);
+                        }
+                    }
+                }
             }
 
-            loggingDepth = Integer.parseInt(args[0]);
+            TicTacToe tictactoe = new TicTacToe(loggingDepth, useAlphaBeta, useDepthLimit, depth);
+            tictactoe.run();
         }
-
-        TicTacToe tictactoe = new TicTacToe(loggingDepth);
-        tictactoe.run();
     }
 
-}
+
