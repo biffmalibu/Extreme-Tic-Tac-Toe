@@ -1,7 +1,10 @@
 // File:   TicTacToe.java
 // Author: Hank Feild, CSC460 class
-// Date:   2022-03-10, updated 2024-04-01
+// Author: Bradford Torpey, CSC460 class
+// Date:   2022-03-10, updated 2024-04-01, 2024-04-02
 // Purpose: Plays a game of TicTacToe between the user and the computer using Minimax.
+
+// Added support for depth limiting and alpha-beta pruning.
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -317,7 +320,7 @@ public class TicTacToe {
 
             // Computer's turn.
             System.out.println("\nComputer's turn:");
-            aiMove = ((TicTacToeActionUtility) minimax.value(currentState, -1, loggingDepth, "")).move;
+            aiMove = ((TicTacToeActionUtility) minimax.value(currentState, depth, loggingDepth, "")).move;
             currentState.makeMove('O', aiMove);
 
             printBoard(currentState.board);
@@ -365,7 +368,7 @@ public class TicTacToe {
             int loggingDepth = 0;
             boolean useAlphaBeta = false;
             boolean useDepthLimit = false;
-            int depth = 0;
+            int depth = -1;
 
             if (args.length > 0) {
                 if (args[0].equals("-h")) {
