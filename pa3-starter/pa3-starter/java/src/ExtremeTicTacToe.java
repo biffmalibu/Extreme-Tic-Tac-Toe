@@ -424,6 +424,7 @@ public class ExtremeTicTacToe {
             // Computer's turn.
             System.out.println("\nComputer's turn:");
             aiMove = ((TicTacToeActionUtility) minimax.value(currentState, depth, loggingDepth, "")).move;
+            System.out.println("States expanded: " + Minimax.getStateCount());
             currentState.makeMove('O', aiMove);
 
             printBoard(currentState.board);

@@ -1,17 +1,29 @@
 // File:   Minimax.java
 // Author: Hank Feild, CSC460 class
-// Date:   2022-03-10, updated 2024-04-01
+// Author: Bradford Torpey, CSC460 class
+// Date:   2022-03-10, updated 2024-04-01, 2024-04-02
 // Purpose: Carries out the actions of Minimax.
+
+// Added support for depth limiting and alpha-beta pruning.
+
 
 /**
  * Performs Minimax to find the action with the best outcome for a
  * given player.
  */
 public class Minimax  {
-    public static boolean useAlphaBeta = false;
+    private static boolean useAlphaBeta = false;
+    private static int stateCount = 0;
 
     public static void setAlphaBeta(boolean useAlphaBeta) {
         Minimax.useAlphaBeta = useAlphaBeta;
+    }
+    public static void resetStateCount() {
+        stateCount = 0;
+    }
+
+    public static int getStateCount() {
+        return stateCount;
     }
     /**
      * Determines the action/move that the next player should make given the
@@ -30,6 +42,12 @@ public class Minimax  {
      */
     public ActionUtility value(GameState state, 
             int depth, int loggingDepth, String loggingPrefix) {
+
+        stateCount++; // Increment the state count
+
+        if (stateCount % 10000000 == 0) {
+            System.out.println("States expanded: " + stateCount);
+        }
 
         if(state.isTerminal()) {
             return state.getActionUtility();
