@@ -470,15 +470,15 @@ public class ExtremeTicTacToe {
                             if (profile.equals("beginner")) {
                                 useAlphaBeta = true;
                                 useDepthLimit = true;
-                                depth = 3;
+                                depth = 5;
                             } else if (profile.equals("intermediate")) {
                                 useAlphaBeta = true;
                                 useDepthLimit = true;
-                                depth = 5;
+                                depth = 8;
                             } else if (profile.equals("advanced")) {
                                 useAlphaBeta = true;
                                 useDepthLimit = true;
-                                depth = 8;
+                                depth = 13;
                             } else {
                                 System.out.println("Invalid profile. Please choose from beginner, intermediate, or advanced.");
                                 System.out.println(USAGE);

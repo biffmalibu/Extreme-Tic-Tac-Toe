@@ -452,11 +452,13 @@ public class AIvsAI {
                         if (i + 1 < args.length) {
                             playerOneDifficulty = args[i + 1];
                             if (playerOneDifficulty.equals("beginner")) {
-                                playerOneDepthLimit = 3;
-                            } else if (playerOneDifficulty.equals("intermediate")) {
                                 playerOneDepthLimit = 5;
-                            } else if (playerOneDifficulty.equals("advanced")) {
+                                playerOneAlphaBeta = true;
+                            } else if (playerOneDifficulty.equals("intermediate")) {
                                 playerOneDepthLimit = 8;
+                                playerOneAlphaBeta = true;
+                            } else if (playerOneDifficulty.equals("advanced")) {
+                                playerOneDepthLimit = 13;
                                 playerOneAlphaBeta = true;
                             } else {
                                 System.out.println("Invalid player one difficulty value. Please choose either beginner, intermediate, or advanced.");
@@ -474,11 +476,13 @@ public class AIvsAI {
                         if (i + 1 < args.length) {
                             playerTwoDifficulty = args[i + 1];
                             if (playerTwoDifficulty.equals("beginner")) {
-                                playerTwoDepthLimit = 3;
-                            } else if (playerTwoDifficulty.equals("intermediate")) {
                                 playerTwoDepthLimit = 5;
-                            } else if (playerTwoDifficulty.equals("advanced")) {
+                                playerTwoAlphaBeta = true;
+                            } else if (playerTwoDifficulty.equals("intermediate")) {
                                 playerTwoDepthLimit = 8;
+                                playerTwoAlphaBeta = true;
+                            } else if (playerTwoDifficulty.equals("advanced")) {
+                                playerTwoDepthLimit = 13;
                                 playerTwoAlphaBeta = true;
                             } else {
                                 System.out.println("Invalid player two difficulty value. Please choose either beginner, intermediate, or advanced.");
