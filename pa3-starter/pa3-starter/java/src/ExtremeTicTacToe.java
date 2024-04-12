@@ -366,11 +366,15 @@ public class ExtremeTicTacToe {
             // Human's turn.
             System.out.print("Your turn; enter the space # where you'd like to put your X: ");
             userMove = input.nextInt();
-            while(currentState.board[userMove-1] != ' '){
+            while(userMove < 1 || userMove > 16){ // Check if the move is valid.
+                System.out.print("Invalid move; try again: ");
+                userMove = input.nextInt();
+            }
+            while(currentState.board[userMove-1] != ' '){ // Check if the spot is taken.
                 System.out.print("That spot is taken; try again: ");
                 userMove = input.nextInt();
             }
-            currentState.makeMove('X', userMove);
+            currentState.makeMove('X', userMove); // Make the move.
 
             printBoard(currentState.board);
 
