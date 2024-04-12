@@ -376,7 +376,6 @@ public class AIvsAI {
 
             // Check if player one won.
             if(currentState.isTerminal()) {
-                System.out.println("Player one wins!");
                 break;
             }
 
@@ -393,12 +392,20 @@ public class AIvsAI {
 
             // Check if player two won.
             if(currentState.isTerminal()) {
-                System.out.println("Player two wins!");
                 break;
             }
         }
 
         System.out.println("Game over. Utility: "+ currentState.utility());
+        if(currentState.utility() == 0){
+            System.out.println("Draw.");
+        }
+        else if(currentState.utility() == 1){
+            System.out.println("Player one wins.");
+        }
+        else{
+            System.out.println("Player two wins.");
+        }
 
     }
 

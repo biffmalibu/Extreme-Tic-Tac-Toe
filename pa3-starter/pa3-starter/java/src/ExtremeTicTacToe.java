@@ -198,13 +198,20 @@ public class ExtremeTicTacToe {
 
             // Two in a row by diagonal.
             if (board[0] == board[5] && board[10] == ' ' || board[0] == board[10] && board[5] == ' '
-                    || board[5] == board[10] && board[0] == ' ') {
-                total += board[0] == 'X' || board[5] == 'X' ? 1 : -1;
+                    || board[5] == board[10] && board[0] == ' ' || board[0] == board[15] && board[5] == ' '
+                    || board[0] == board[5] && board[15] == ' ' || board[10] == board[5] && board[15] == ' '
+                    || board[5] == board[15] && board[0] == ' ' || board[10] == board[15] && board[0] == ' '
+                    || board[5] == board[15] && board[10] == ' ' || board[0] == board[15] && board[10] == ' ') {
+                total += board[0] == 'X' || board[5] == 'X' || board[15] == 'X' ? 1 : -1;
             }
 
             if (board[3] == board[6] && board[9] == ' ' || board[3] == board[9] && board[6] == ' '
-                    || board[6] == board[9] && board[3] == ' ') {
-                total += board[3] == 'X' || board[6] == 'X' ? 1 : -1;
+                    || board[6] == board[9] && board[3] == ' ' || board[3] == board[12] && board[6] == ' '
+                    || board[3] == board[6] && board[12] == ' ' || board[9] == board[6] && board[12] == ' '
+                    || board[6] == board[12] && board[3] == ' ' || board[9] == board[12] && board[3] == ' '
+                    || board[6] == board[12] && board[9] == ' ' || board[3] == board[9] && board[12] == ' '
+                    || board[3] == board[9] && board[12] == ' ' || board[9] == board[12] && board[6] == ' ') {
+                total += board[3] == 'X' || board[6] == 'X' || board[12] == 'X' ? 1 : -1;
             }
 
             // Two in a square.
@@ -365,14 +372,44 @@ public class ExtremeTicTacToe {
         while(true){
             // Human's turn.
             System.out.print("Your turn; enter the space # where you'd like to put your X: ");
-            userMove = input.nextInt();
-            while(userMove < 1 || userMove > 16){ // Check if the move is valid.
-                System.out.print("Invalid move; try again: ");
-                userMove = input.nextInt();
+            String userInput = input.next();
+            if (userInput.length() == 1) {
+                char moveChar = userInput.charAt(0);
+                if (moveChar >= 'A' && moveChar <= 'G') {
+                    userMove = moveChar - 'A' + 10;
+                } else {
+                    userMove = Character.getNumericValue(moveChar);
+                }
+            } else {
+                userMove = Integer.parseInt(userInput);
             }
-            while(currentState.board[userMove-1] != ' '){ // Check if the spot is taken.
+            while (userMove < 1 || userMove > 16) { // Check if the move is valid.
+                System.out.print("Invalid move; try again: ");
+                userInput = input.next();
+                if (userInput.length() == 1) {
+                    char moveChar = userInput.charAt(0);
+                    if (moveChar >= 'A' && moveChar <= 'G') {
+                        userMove = moveChar - 'A' + 10;
+                    } else {
+                        userMove = Character.getNumericValue(moveChar);
+                    }
+                } else {
+                    userMove = Integer.parseInt(userInput);
+                }
+            }
+            while (currentState.board[userMove - 1] != ' ') { // Check if the spot is taken.
                 System.out.print("That spot is taken; try again: ");
-                userMove = input.nextInt();
+                userInput = input.next();
+                if (userInput.length() == 1) {
+                    char moveChar = userInput.charAt(0);
+                    if (moveChar >= 'A' && moveChar <= 'G') {
+                        userMove = moveChar - 'A' + 10;
+                    } else {
+                        userMove = Character.getNumericValue(moveChar);
+                    }
+                } else {
+                    userMove = Integer.parseInt(userInput);
+                }
             }
             currentState.makeMove('X', userMove); // Make the move.
 
