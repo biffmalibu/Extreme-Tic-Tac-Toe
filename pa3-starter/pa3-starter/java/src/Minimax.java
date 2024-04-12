@@ -1,10 +1,11 @@
 // File:   Minimax.java
 // Author: Hank Feild, CSC460 class
 // Author: Bradford Torpey, CSC460 class
-// Date:   2022-03-10, updated 2024-04-01, 2024-04-02
+// Date:   2022-03-10, updated 4/12/2022
 // Purpose: Carries out the actions of Minimax.
 
 // Added support for depth limiting and alpha-beta pruning.
+// Github copilot was used to help create minValueAlphaBeta and maxValueAlphaBeta.
 
 
 /**
@@ -40,32 +41,30 @@ public class Minimax  {
      * @return The action/move the next player should make and the expected
      *         utility of that move.
      */
-    public ActionUtility value(GameState state, 
-            int depth, int loggingDepth, String loggingPrefix) {
-
+    public ActionUtility value(GameState state, int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
         stateCount++; // Increment the state count
-
+    
         if (stateCount % 10000000 == 0) {
             System.out.println("States expanded: " + stateCount);
         }
-
-        if(state.isTerminal()) {
+    
+        if (state.isTerminal()) {
             return state.getActionUtility();
-
-        } else if(depth == 0) {
-            // return the result of evaluation function.
+    
+        } else if (depth == 0) {
+            // Return the result of the evaluation function.
             return state.getActionEval();
-
-        } else if(state.isMax()) {
+    
+        } else if (state.isMax()) {
             if (useAlphaBeta) {
-                return maxValueAlphaBeta(state, depth, loggingDepth, loggingPrefix, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+                return maxValueAlphaBeta(state, depth, loggingDepth, loggingPrefix, alpha, beta);
             } else {
                 return maxValue(state, depth, loggingDepth, loggingPrefix);
             }
-
+    
         } else {
             if (useAlphaBeta) {
-                return minValueAlphaBeta(state, depth, loggingDepth, loggingPrefix, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+                return minValueAlphaBeta(state, depth, loggingDepth, loggingPrefix, alpha, beta);
             } else {
                 return minValue(state, depth, loggingDepth, loggingPrefix);
             }
@@ -94,7 +93,7 @@ public class Minimax  {
         
         for(GameState successor : state.successors()){
             ActionUtility successorActionUtility = 
-                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ");
+                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ", 0,0);
 
             // Logging.
             if(loggingDepth > 0) {
@@ -135,43 +134,33 @@ public class Minimax  {
      * @return The action/move the next player should make and the expected
      *         utility of that move.
      */
-    public ActionUtility maxValueAlphaBeta(GameState state, 
-        int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
-
+    public ActionUtility maxValueAlphaBeta(GameState state, int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
         ActionUtility actionUtility = null;
-        
-        for(GameState successor : state.successors()){
-            ActionUtility successorActionUtility = 
-                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ");
-
-            // Logging.
+    
+        for (GameState successor : state.successors()) {
+            ActionUtility successorActionUtility = value(successor, depth - 1, loggingDepth - 1, loggingPrefix + " ", alpha, beta);
+    
+            // Logging...
             if(loggingDepth > 0) {
                 System.out.println(loggingPrefix +"maxValueAlphaBeta: "+ 
                     successor.toString().replaceAll("\n", "\n"+loggingPrefix) +"\n"+ 
                     loggingPrefix +successorActionUtility.toString().
                     replaceAll("\n", "\n"+loggingPrefix));
             }   
-
-            if(actionUtility == null || 
-                successorActionUtility.getUtility() > actionUtility.getUtility()) {
+    
+            if (actionUtility == null || successorActionUtility.getUtility() > actionUtility.getUtility()) {
                 actionUtility = successor.getActionUtility(successorActionUtility.getUtility());
             }
-
+    
             // Alpha-beta pruning.
             if (actionUtility.getUtility() >= beta) {
                 return actionUtility;
             }
             alpha = Math.max(alpha, actionUtility.getUtility());
         }
-        
-        // Logging.
-        if(loggingDepth > 0) {
-            System.out.println(loggingPrefix+ "maxValueAlphaBeta: returning "+ 
-                actionUtility.toString().replaceAll("\n", "\n"+loggingPrefix));
-        }
-
+    
         return actionUtility;
-    }
+    }    
     /**
      * Selects the move that minimizes utility over the successors of the
      * given state.
@@ -194,7 +183,7 @@ public class Minimax  {
         
         for(GameState successor : state.successors()){
             ActionUtility successorActionUtility = 
-                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ");
+                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ",0,0);
 
             // Logging.
             if(loggingDepth > 0) {
@@ -234,41 +223,31 @@ public class Minimax  {
      * @return The action/move the next player should make and the expected
      *         utility of that move.
      */
-    public ActionUtility minValueAlphaBeta(GameState state, 
-        int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
-
+    public ActionUtility minValueAlphaBeta(GameState state, int depth, int loggingDepth, String loggingPrefix, double alpha, double beta) {
         ActionUtility actionUtility = null;
-        
-        for(GameState successor : state.successors()){
-            ActionUtility successorActionUtility = 
-                value(successor, depth-1, loggingDepth-1, loggingPrefix+" ");
-
-            // Logging.
+    
+        for (GameState successor : state.successors()) {
+            ActionUtility successorActionUtility = value(successor, depth - 1, loggingDepth - 1, loggingPrefix + " ", alpha, beta);
+    
+            // Logging...
             if(loggingDepth > 0) {
                 System.out.println(loggingPrefix +"minValueAlphaBeta: "+ 
                     successor.toString().replaceAll("\n", "\n"+loggingPrefix) +"\n"+ 
                     loggingPrefix +successorActionUtility.toString().
                     replaceAll("\n", "\n"+loggingPrefix));
             }   
-
-            if(actionUtility == null || 
-                    successorActionUtility.getUtility() < actionUtility.getUtility()) {
+    
+            if (actionUtility == null || successorActionUtility.getUtility() < actionUtility.getUtility()) {
                 actionUtility = successor.getActionUtility(successorActionUtility.getUtility());
             }
-
+    
             // Alpha-beta pruning.
             if (actionUtility.getUtility() <= alpha) {
                 return actionUtility;
             }
             beta = Math.min(beta, actionUtility.getUtility());
         }
-        
-        // Logging.
-        if(loggingDepth > 0) {
-            System.out.println(loggingPrefix+ "minValueAlphaBeta: returning "+ 
-                actionUtility.toString().replaceAll("\n", "\n"+loggingPrefix));
-        }
-
+    
         return actionUtility;
     }
 

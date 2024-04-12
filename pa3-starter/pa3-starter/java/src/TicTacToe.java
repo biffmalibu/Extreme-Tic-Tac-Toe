@@ -320,7 +320,7 @@ public class TicTacToe {
 
             // Computer's turn.
             System.out.println("\nComputer's turn:");
-            aiMove = ((TicTacToeActionUtility) minimax.value(currentState, depth, loggingDepth, "")).move;
+            aiMove = ((TicTacToeActionUtility) minimax.value(currentState, depth, loggingDepth, "", Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY)).move;
             System.out.println("States expanded: " + Minimax.getStateCount());
             Minimax.resetStateCount();
             currentState.makeMove('O', aiMove);

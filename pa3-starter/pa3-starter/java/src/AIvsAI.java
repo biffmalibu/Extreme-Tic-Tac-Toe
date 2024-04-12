@@ -367,7 +367,7 @@ public class AIvsAI {
             // Player one turn.
             System.out.println("\nPlayer one's turn:");
             Minimax.setAlphaBeta(playerOneAlphaBeta);
-            playerOneMove = ((TicTacToeActionUtility) minimax.value(currentState, playerOneDepthLimit, loggingDepth, "")).move;
+            playerOneMove = ((TicTacToeActionUtility) minimax.value(currentState, playerOneDepthLimit, loggingDepth, "", Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY)).move;
             System.out.println("States expanded: " + Minimax.getStateCount());
             Minimax.resetStateCount();
             currentState.makeMove('X', playerOneMove);
@@ -384,7 +384,7 @@ public class AIvsAI {
             // Player two turn.
             System.out.println("\nPlayer Two's turn:");
             Minimax.setAlphaBeta(playerTwoAlphaBeta);
-            playerTwoMove = ((TicTacToeActionUtility) minimax.value(currentState, playerTwoDepthLimit, loggingDepth, "")).move;
+            playerTwoMove = ((TicTacToeActionUtility) minimax.value(currentState, playerTwoDepthLimit, loggingDepth, "", Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY)).move;
             System.out.println("States expanded: " + Minimax.getStateCount());
             Minimax.resetStateCount();
             currentState.makeMove('O', playerTwoMove);
