@@ -3,6 +3,8 @@
 // Date:   2024-04-11
 // Purpose: Plays a game of ExtremeTicTacToe between the user and the computer using Minimax.
 
+// Github copilot was used to cleanup/revise the eval() method.
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -169,98 +171,56 @@ public class ExtremeTicTacToe {
             return 0;
         }
         /**
-         * Evaluates a non-terminal state. Each column that has two X's or two O's
+         * Evaluates a non-terminal state. Each column that has three X's or three O's
          * and one open space yields a value of 1 (for X) or -1 (for O). This is
-         * summed across the three columns for the final value.
+         * summed across the four columns for the final value.
          * 
          * @return A positive return value favors X's chances of winning, negative
          * favors O's, an 0 is an expected draw.
          */
-        public double eval(){
+        public double eval() { // This method was produced using github copilot
             double total = 0;
-
             // Two in a row by column.
-            if(board[0] == board[3] && board[6] == ' ' || board[0] == board[6] && 
-                board[3] == ' ' || board[3] == board[6] && board[0] == ' ')
-            total += board[0] == 'X' || board[3] == 'X' ? 1 : -1;
-
-            if(board[1] == board[4] && board[7] == ' ' || board[1] == board[7] && 
-                board[4] == ' ' || board[4] == board[7] && board[1] == ' ')
-            total += board[1] == 'X' || board[4] == 'X' ? 1 : -1;
-
-            if(board[2] == board[5] && board[8] == ' ' || board[2] == board[8] && 
-                board[5] == ' ' || board[5] == board[8] && board[2] == ' ')
-            total += board[2] == 'X' || board[5] == 'X' ? 1 : -1;
+            for (int i = 0; i < 4; i++) {
+                if (board[i] == board[i + 4] && board[i + 8] == ' ' || board[i] == board[i + 8] && board[i + 4] == ' '
+                        || board[i + 4] == board[i + 8] && board[i] == ' ') {
+                    total += board[i] == 'X' || board[i + 4] == 'X' ? 1 : -1;
+                }
+            }
 
             // Two in a row by row.
-            if(board[0] == board[1] && board[2] == ' ' || board[0] == board[2] && 
-                board[1] == ' ' || board[1] == board[2] && board[0] == ' ')
-            total += board[0] == 'X' || board[1] == 'X' ? 1 : -1;
-
-            if(board[4] == board[5] && board[6] == ' ' || board[4] == board[6] && 
-                board[5] == ' ' || board[5] == board[6] && board[4] == ' ')
-            total += board[4] == 'X' || board[5] == 'X' ? 1 : -1;
-
-            if(board[8] == board[9] && board[10] == ' ' || board[8] == board[10] && 
-                board[9] == ' ' || board[9] == board[10] && board[8] == ' ')
-            total += board[8] == 'X' || board[9] == 'X' ? 1 : -1;
-
-            if(board[12] == board[13] && board[14] == ' ' || board[12] == board[14] && 
-                board[13] == ' ' || board[13] == board[14] && board[12] == ' ')
-            total += board[12] == 'X' || board[13] == 'X' ? 1 : -1;
+            for (int i = 0; i < 12; i += 4) {
+                if (board[i] == board[i + 1] && board[i + 2] == ' ' || board[i] == board[i + 2] && board[i + 1] == ' '
+                        || board[i + 1] == board[i + 2] && board[i] == ' ') {
+                    total += board[i] == 'X' || board[i + 1] == 'X' ? 1 : -1;
+                }
+            }
 
             // Two in a row by diagonal.
-            if(board[0] == board[5] && board[10] == ' ' || board[0] == board[10] && 
-                board[5] == ' ' || board[5] == board[10] && board[0] == ' ')
-            total += board[0] == 'X' || board[5] == 'X' ? 1 : -1;
+            if (board[0] == board[5] && board[10] == ' ' || board[0] == board[10] && board[5] == ' '
+                    || board[5] == board[10] && board[0] == ' ') {
+                total += board[0] == 'X' || board[5] == 'X' ? 1 : -1;
+            }
 
-            if(board[3] == board[6] && board[9] == ' ' || board[3] == board[9] && 
-                board[6] == ' ' || board[6] == board[9] && board[3] == ' ')
-            total += board[3] == 'X' || board[6] == 'X' ? 1 : -1;
+            if (board[3] == board[6] && board[9] == ' ' || board[3] == board[9] && board[6] == ' '
+                    || board[6] == board[9] && board[3] == ' ') {
+                total += board[3] == 'X' || board[6] == 'X' ? 1 : -1;
+            }
 
             // Two in a square.
-            if(board[0] == board[1] && board[4] == ' ' || board[0] == board[4] && 
-                board[1] == ' ' || board[1] == board[4] && board[0] == ' ')
-            total += board[0] == 'X' || board[1] == 'X' ? 1 : -1;
-
-            if(board[1] == board[2] && board[5] == ' ' || board[1] == board[5] && 
-                board[2] == ' ' || board[2] == board[5] && board[1] == ' ')
-            total += board[1] == 'X' || board[2] == 'X' ? 1 : -1;
-
-            if(board[2] == board[3] && board[6] == ' ' || board[2] == board[6] && 
-                board[3] == ' ' || board[3] == board[6] && board[2] == ' ')
-            total += board[2] == 'X' || board[3] == 'X' ? 1 : -1;
-
-            if(board[4] == board[5] && board[8] == ' ' || board[4] == board[8] && 
-                board[5] == ' ' || board[5] == board[8] && board[4] == ' ')
-            total += board[4] == 'X' || board[5] == 'X' ? 1 : -1;
-
-            if(board[5] == board[6] && board[9] == ' ' || board[5] == board[9] && 
-                board[6] == ' ' || board[6] == board[9] && board[5] == ' ')
-            total += board[5] == 'X' || board[6] == 'X' ? 1 : -1;
-
-            if(board[6] == board[7] && board[10] == ' ' || board[6] == board[10] && 
-                board[7] == ' ' || board[7] == board[10] && board[6] == ' ')
-            total += board[6] == 'X' || board[7] == 'X' ? 1 : -1;
-
-            if(board[8] == board[9] && board[12] == ' ' || board[8] == board[12] && 
-                board[9] == ' ' || board[9] == board[12] && board[8] == ' ')
-            total += board[8] == 'X' || board[9] == 'X' ? 1 : -1;
-
-            if(board[9] == board[10] && board[13] == ' ' || board[9] == board[13] && 
-                board[10] == ' ' || board[10] == board[13] && board[9] == ' ')
-            total += board[9] == 'X' || board[10] == 'X' ? 1 : -1;
-
-            if(board[10] == board[11] && board[14] == ' ' || board[10] == board[14] && 
-                board[11] == ' ' || board[11] == board[14] && board[10] == ' ')
-            total += board[10] == 'X' || board[11] == 'X' ? 1 : -1;
+            for (int i = 0; i < 12; i += 4) {
+                if (board[i] == board[i + 1] && board[i + 4] == ' ' || board[i] == board[i + 4] && board[i + 1] == ' '
+                        || board[i + 1] == board[i + 4] && board[i] == ' ') {
+                    total += board[i] == 'X' || board[i + 1] == 'X' ? 1 : -1;
+                }
+            }
 
             // Four corners.
-            if(board[0] == board[3] && board[12] == ' ' || board[0] == board[12] && 
-                board[3] == ' ' || board[3] == board[12] && board[0] == ' ')
-            total += board[0] == 'X' || board[3] == 'X' ? 1 : -1;
+            if (board[0] == board[3] && board[12] == ' ' || board[0] == board[12] && board[3] == ' '
+                    || board[3] == board[12] && board[0] == ' ') {
+                total += board[0] == 'X' || board[3] == 'X' ? 1 : -1;
+            }
 
-            // If nothing else, draw.
             return total;
         }
         /**
@@ -425,6 +385,7 @@ public class ExtremeTicTacToe {
             System.out.println("\nComputer's turn:");
             aiMove = ((TicTacToeActionUtility) minimax.value(currentState, depth, loggingDepth, "")).move;
             System.out.println("States expanded: " + Minimax.getStateCount());
+            Minimax.resetStateCount();
             currentState.makeMove('O', aiMove);
 
             printBoard(currentState.board);
@@ -460,12 +421,14 @@ public class ExtremeTicTacToe {
      * @param args Ignored.
      */
         public static void main(String[] args) {
-            String USAGE = "Usage: java TicTacToe [-h] [-a] [-d <depth>] [-l <loggingDepth>]\n" +
+            String USAGE = "Usage: java ExtremeTicTacToe [-h] [-a] [-d <depth>] [-l <loggingDepth>]\n" +
                     "All parameters are optional.\n" +
                     "  -h: Display this help message.\n" +
                     "  -a: Enable alpha-beta pruning.\n" +
                     "  -d <depth>: Specify the depth for depth-limited minimax.\n" +
-                    "  -l <loggingDepth>: Specify the logging depth.\n";
+                    "  -l <loggingDepth>: Specify the logging depth.\n"+
+                    "  -p <profile>: Specify beginner, intermediate, or advanced profile. (-a and d parameters will be ignored)\n";
+
 
             int loggingDepth = 0;
             boolean useAlphaBeta = false;
@@ -488,6 +451,7 @@ public class ExtremeTicTacToe {
                             useDepthLimit = true;
                         } else {
                             System.out.println("Invalid depth value.");
+                            System.out.println(USAGE);
                             System.exit(0);
                         }
                     }
@@ -496,6 +460,33 @@ public class ExtremeTicTacToe {
                             loggingDepth = Integer.parseInt(args[i + 1]);
                         } else {
                             System.out.println("Invalid logging depth value.");
+                            System.out.println(USAGE);
+                            System.exit(0);
+                        }
+                    }
+                    if (args[i].equals("-p")) {
+                        if (i + 1 < args.length) {
+                            String profile = args[i + 1];
+                            if (profile.equals("beginner")) {
+                                useAlphaBeta = true;
+                                useDepthLimit = true;
+                                depth = 3;
+                            } else if (profile.equals("intermediate")) {
+                                useAlphaBeta = true;
+                                useDepthLimit = true;
+                                depth = 5;
+                            } else if (profile.equals("advanced")) {
+                                useAlphaBeta = true;
+                                useDepthLimit = true;
+                                depth = 8;
+                            } else {
+                                System.out.println("Invalid profile. Please choose from beginner, intermediate, or advanced.");
+                                System.out.println(USAGE);
+                                System.exit(0);
+                            }
+                        } else {
+                            System.out.println("Invalid profile value.");
+                            System.out.println(USAGE);
                             System.exit(0);
                         }
                     }
