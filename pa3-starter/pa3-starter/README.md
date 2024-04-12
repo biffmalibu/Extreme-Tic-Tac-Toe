@@ -2,7 +2,7 @@
 
 ## Directory contents
 
-    java/ -- A Java implementation of Tic-Tac-Toe and Minimax.
+    java/ -- A Java implementation of Tic-Tac-Toe, ExtremeTicTacToe and Minimax.
         bin/ -- initially empty; after compilation, this contains all of the .class
                 files.
         src/ -- contains the Java source files.
@@ -65,6 +65,7 @@ happening down to a pre-specified depth. To use this, just specify the depth
 you'd like to see logging turned on for when you run the program by -l (depth):
 
     java -cp bin TicTacToe -l 5
+    java -cp bin ExtremeTicTacToe -l 5
 
 or
 
@@ -78,12 +79,31 @@ The Minimax implementation has an alpha beta pruing feature that can be enabled
 or disabled. to use alphabeta pruning, simply add -a to the command line arguments:
 
     java -cp bin TicTacToe -a
+    java -cp bin ExtremeTicTacToe -a
 
 # Depth Limited Minimax
 The Minimax implementation can search down to a specified depth. this can be
 enabled or disabled. To enable depth limited minimax add -d (depth)
 
     java -cp bin TicTacToe -d 5
+    java -cp bin ExtremeTicTacToe -d 5
 
 This will limit minimax search to a depth of 5.
+
+# Profiles
+The ExtremeTicTacToe implementation allows for the use of pre-specified profiles
+to use instead of enabling depth limiting or ab pruning manually. Choose between 
+beginner, intermediate, and advanced. -a and -d parameters are ignored. use -p (profile)
+
+    java -cp bin ExtremeTicTacToe -p advanced
+
+This will set the computers difficulty to advanced.
+
+# Evaluation function
+
+The evaluation function is used to analyze non-terminal states. Using the 4x4
+ExtremeTicTacToe grid, we search for 2 spots taken of the same letter, and use 
+that to increment or decrement the total by 1. While we are not checking if 3/4 
+spots needed to win are taken, checking for 2 should be effective still as it 
+implies we are closer to a win. (+1 for X, -1 for O)
 
