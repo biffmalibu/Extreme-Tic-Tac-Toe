@@ -14,7 +14,7 @@
  */
 public class Minimax  {
     private static boolean useAlphaBeta = false;
-    private static int stateCount = 0;
+    private static long stateCount = 0;
 
     public static void setAlphaBeta(boolean useAlphaBeta) {
         Minimax.useAlphaBeta = useAlphaBeta;
@@ -23,7 +23,7 @@ public class Minimax  {
         stateCount = 0;
     }
 
-    public static int getStateCount() {
+    public static long getStateCount() {
         return stateCount;
     }
     /**
